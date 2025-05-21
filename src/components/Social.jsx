@@ -1,7 +1,6 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { SocialIcon } from 'react-social-icons';
 import { ThemeContext } from 'styled-components';
-import endpoints from '../constants/endpoints';
 
 const styles = {
   iconStyle: {
@@ -13,30 +12,27 @@ const styles = {
 
 function Social() {
   const theme = useContext(ThemeContext);
-  const [data, setData] = useState(null);
 
-  useEffect(() => {
-    fetch(endpoints.social, {
-      method: 'GET',
-    })
-      .then((res) => res.json())
-      .then((res) => setData(res))
-      .catch((err) => err);
-  }, []);
+  // Manually define social links
+  const socialLinks = [
+    { network: 'linkedin', href: 'https://www.linkedin.com/in/naveen-s-a70854268/' },
+    { network: 'github', href: 'https://github.com/naveeen0308' },
+    { network: 'email', href: 'mailto:99220040949@klu.ac.in' },
+  ];
 
   return (
     <div className="social">
-      {data ? data.social.map((social) => (
+      {socialLinks.map((social) => (
         <SocialIcon
           key={social.network}
           style={styles.iconStyle}
           url={social.href}
           network={social.network}
-          bgColor={theme.socialIconBgColor}
+          bgColor={theme?.socialIconBgColor || '#333'}
           target="_blank"
-          rel="noopener"
+          rel="noopener noreferrer"
         />
-      )) : null}
+      ))}
     </div>
   );
 }

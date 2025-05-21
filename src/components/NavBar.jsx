@@ -42,12 +42,10 @@ const NavBar = () => {
   const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
-    fetch(endpoints.navbar, {
-      method: 'GET',
-    })
+    fetch(endpoints.navbar, { method: 'GET' })
       .then((res) => res.json())
       .then((res) => setData(res))
-      .catch((err) => err);
+      .catch((err) => console.error(err));
   }, []);
 
   return (
@@ -63,12 +61,12 @@ const NavBar = () => {
         {data?.logo && (
           <Navbar.Brand href="/">
             <img
-              src={data?.logo?.source}
+              src={data.logo.source}
               className="d-inline-block align-top"
               alt="main logo"
               style={
-                data?.logo?.height && data?.logo?.width
-                  ? { height: data?.logo?.height, width: data?.logo?.width }
+                data.logo.height && data.logo.width
+                  ? { height: data.logo.height, width: data.logo.width }
                   : styles.logoStyle
               }
             />
@@ -81,20 +79,23 @@ const NavBar = () => {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto" />
           <Nav>
-            {data
-              && data.sections?.map((section, index) => (section?.type === 'link' ? (
-                <ExternalNavLink
-                  key={section.title}
-                  href={section.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => setExpanded(false)}
-                  className="navbar__link"
-                  theme={theme}
-                >
-                  {section.title}
-                </ExternalNavLink>
-              ) : (
+            {data?.sections?.map((section, index) => {
+              if (section?.type === 'link') {
+                return (
+                  <ExternalNavLink
+                    key={section.title}
+                    href={section.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setExpanded(false)}
+                    className="navbar__link"
+                    theme={theme}
+                  >
+                    {section.title}
+                  </ExternalNavLink>
+                );
+              }
+              return (
                 <InternalNavLink
                   key={section.title}
                   onClick={() => setExpanded(false)}
@@ -106,11 +107,23 @@ const NavBar = () => {
                 >
                   {section.title}
                 </InternalNavLink>
-              )))}
+              );
+            })}
+
+            {/* ✅ Resume PDF Link (Updated & Fixed) */}
+            <ExternalNavLink
+              href={data?.resume || '/Resume.pdf'}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setExpanded(false)}
+              className="navbar__link"
+              theme={theme}
+            >
+              Resume
+            </ExternalNavLink>
           </Nav>
-          <ThemeToggler
-            onClick={() => setExpanded(false)}
-          />
+
+          <ThemeToggler onClick={() => setExpanded(false)} />
         </Navbar.Collapse>
       </Container>
     </Navbar>

@@ -1,86 +1,53 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { Chrono } from 'react-chrono';
-import { Container } from 'react-bootstrap';
-import PropTypes from 'prop-types';
-import Fade from 'react-reveal';
-import { ThemeContext } from 'styled-components';
-import endpoints from '../constants/endpoints';
-import Header from './Header';
-import FallbackSpinner from './FallbackSpinner';
+import React from 'react';
 import '../css/education.css';
 
-function Education(props) {
-  const theme = useContext(ThemeContext);
-  const { header } = props;
-  const [data, setData] = useState(null);
-  const [width, setWidth] = useState('50vw');
-  const [mode, setMode] = useState('VERTICAL_ALTERNATING');
+const educationData = [
+  {
+    id: 1,
+    degree: 'B.Tech in Computer Science and Engineering (AIML)',
+    institution: 'Kalasalingam Academy of Research and Education, Srivilliputhur, Tamil Nadu',
+    details: 'CGPA: 9.67',
+    date: 'Expected 2026',
+    position: 'left',
+    logo: '/images/education/klu1.jpg',
+  },
+  {
+    id: 2,
+    degree: 'Higher Secondary Education',
+    institution: 'Chinmaya Vidyalaya (CBSE), Nagapattinam',
+    details: 'Marks: 83.2%',
+    date: 'Jun 2022',
+    position: 'right',
+    logo: '/images/education/clg.jpg',
+  },
+  {
+    id: 3,
+    degree: 'Secondary Education',
+    institution: 'Chinmaya Vidyalaya (CBSE), Nagapattinam',
+    details: 'Marks: 89.4%',
+    date: 'june 2020',
+    position: 'left',
+    logo: '/images/education/clg.jpg',
+  },
+];
 
-  useEffect(() => {
-    fetch(endpoints.education, {
-      method: 'GET',
-    })
-      .then((res) => res.json())
-      .then((res) => setData(res))
-      .catch((err) => err);
-
-    if (window?.innerWidth < 576) {
-      setMode('VERTICAL');
-    }
-
-    if (window?.innerWidth < 576) {
-      setWidth('90vw');
-    } else if (window?.innerWidth >= 576 && window?.innerWidth < 768) {
-      setWidth('90vw');
-    } else if (window?.innerWidth >= 768 && window?.innerWidth < 1024) {
-      setWidth('75vw');
-    } else {
-      setWidth('50vw');
-    }
-  }, []);
-
-  return (
-    <>
-      <Header title={header} />
-      {data ? (
-        <Fade>
-          <div style={{ width }} className="section-content-container">
-            <Container>
-              <Chrono
-                hideControls
-                allowDynamicUpdate
-                useReadMore={false}
-                items={data.education}
-                cardHeight={250}
-                mode={mode}
-                theme={{
-                  primary: theme.accentColor,
-                  secondary: theme.accentColor,
-                  cardBgColor: theme.chronoTheme.cardBgColor,
-                  cardForeColor: theme.chronoTheme.cardForeColor,
-                  titleColor: theme.chronoTheme.titleColor,
-                }}
-              >
-                <div className="chrono-icons">
-                  {data.education.map((education) => (education.icon ? (
-                    <img
-                      key={education.icon.src}
-                      src={education.icon.src}
-                      alt={education.icon.alt}
-                    />
-                  ) : null))}
-                </div>
-              </Chrono>
-            </Container>
+const Education = () => (
+  <div className="education-container">
+    <h2 className="education-title">Education</h2>
+    <div className="timeline">
+      {educationData.map((edu) => (
+        <div key={edu.id} className={`timeline-item ${edu.position}`}>
+          <div className="education-card">
+            <img src={edu.logo} alt={`${edu.degree} Logo`} className="education-logo" />
+            <h3>{edu.degree}</h3>
+            <h4 className="institution">{edu.institution}</h4>
+            <p>{edu.details}</p>
+            <span className="timeline-date">{edu.date}</span>
           </div>
-        </Fade>
-      ) : <FallbackSpinner /> }
-    </>
-  );
-}
-
-Education.propTypes = {
-  header: PropTypes.string.isRequired,
-};
+        </div>
+      ))}
+    </div>
+  </div>
+);
 
 export default Education;

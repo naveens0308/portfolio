@@ -1,77 +1,161 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import ReactMarkdown from 'react-markdown';
-import PropTypes from 'prop-types';
 import Fade from 'react-reveal';
 import { Container } from 'react-bootstrap';
-import Header from './Header';
-import endpoints from '../constants/endpoints';
-import FallbackSpinner from './FallbackSpinner';
 
 const styles = {
+  sectionContentContainer: {
+    textAlign: 'center',
+    padding: '40px 0',
+  },
+  skillsHeading: {
+    fontSize: '2rem',
+    fontWeight: 'bold',
+    transition: 'color 0.3s ease-in-out',
+    cursor: 'pointer',
+  },
+  introTextContainer: {
+    whiteSpace: 'pre-wrap',
+    fontSize: '1.1rem',
+    fontWeight: 'bold',
+    color: '#ddd', // Light gray for better contrast
+    marginBottom: '20px',
+  },
+  skillCategory: {
+    marginBottom: '30px',
+  },
+  skillTitle: {
+    fontSize: '1.2rem',
+    fontWeight: 'bold',
+    transition: 'color 0.3s ease-in-out',
+    cursor: 'pointer',
+    color: '#ccc', // Light gray for contrast
+  },
+  skillItem: {
+    display: 'inline-block',
+    textAlign: 'center',
+    margin: '15px',
+    fontWeight: 'bold',
+    color: 'white', // Default skill text color set to white
+    transition: 'color 0.3s ease-in-out, transform 0.3s ease-in-out',
+    cursor: 'pointer',
+  },
   iconStyle: {
     height: 75,
     width: 75,
     margin: 10,
     marginBottom: 0,
-  },
-  introTextContainer: {
-    whiteSpace: 'pre-wrap',
+    transition: 'transform 0.3s ease-in-out',
   },
 };
 
-function Skills(props) {
-  const { header } = props;
-  const [data, setData] = useState(null);
+const mySkills = {
+  intro: 'I specialize in AI, ML, and embedded systems, along with web technologies.',
+  skills: [
+    {
+      title: 'Programming Languages',
+      items: [
+        { title: 'C++', icon: '/images/skills/c-plus-plus.svg' },
+        { title: 'Python', icon: '/images/skills/python.png' },
+        { title: 'Java', icon: '/images/skills/java.png' },
+        { title: 'SQL', icon: '/images/skills/mysql.png' },
+      ],
+    },
+    {
+      title: 'Web Technologies',
+      items: [
+        { title: 'HTML', icon: '/images/skills/html.png' },
+        { title: 'CSS', icon: '/images/skills/css.png' },
+        { title: 'Bootstrap', icon: '/images/skills/bootstrap.jpeg' },
+      ],
+    },
+    {
+      title: 'AI & ML Tools',
+      items: [
+        { title: 'PyTorch', icon: '/images/skills/pytorch.jpeg' },
+        { title: 'ROS2', icon: '/images/skills/ros2.jpeg' },
+        { title: 'TIDL', icon: '/images/skills/tidl.jpeg' },
+      ],
+    },
+    {
+      title: 'Version Control & Cloud',
+      items: [
+        { title: 'Git & GitHub', icon: '/images/skills/git.png' },
+        { title: 'GCP', icon: '/images/skills/GCP.webp' },
+      ],
+    },
+  ],
+};
 
-  const renderSkillsIntro = (intro) => (
-    <h4 style={styles.introTextContainer}>
-      <ReactMarkdown children={intro} />
-    </h4>
-  );
+function Skills() {
+  const handleMouseEnterHeading = (e) => {
+    e.target.style.color = 'red';
+  };
 
-  useEffect(() => {
-    fetch(endpoints.skills, {
-      method: 'GET',
-    })
-      .then((res) => res.json())
-      .then((res) => setData(res))
-      .catch((err) => err);
-  }, []);
+  const handleMouseLeaveHeading = (e) => {
+    e.target.style.color = 'white';
+  };
+
+  const handleMouseEnterTitle = (e) => {
+    e.target.style.color = '#007bff';
+  };
+
+  const handleMouseLeaveTitle = (e) => {
+    e.target.style.color = '#ccc';
+  };
+
+  const handleMouseEnterSkill = (e) => {
+    e.currentTarget.style.color = '#007bff';
+    e.currentTarget.style.transform = 'scale(1.1)';
+  };
+
+  const handleMouseLeaveSkill = (e) => {
+    e.currentTarget.style.color = 'white';
+    e.currentTarget.style.transform = 'scale(1)';
+  };
 
   return (
     <>
-      <Header title={header} />
-      {data ? (
-        <Fade>
-          <div className="section-content-container">
-            <Container>
-              {renderSkillsIntro(data.intro)}
-              {data.skills?.map((rows) => (
-                <div key={rows.title}>
-                  <br />
-                  <h3>{rows.title}</h3>
-                  {rows.items.map((item) => (
-                    <div key={item.title} style={{ display: 'inline-block' }}>
-                      <img
-                        style={styles.iconStyle}
-                        src={item.icon}
-                        alt={item.title}
-                      />
-                      <p>{item.title}</p>
-                    </div>
-                  ))}
-                </div>
-              ))}
-            </Container>
-          </div>
-        </Fade>
-      ) : <FallbackSpinner /> }
+      <Fade>
+        <div style={styles.sectionContentContainer}>
+          <Container>
+            <h2
+              style={styles.skillsHeading}
+              onMouseEnter={handleMouseEnterHeading}
+              onMouseLeave={handleMouseLeaveHeading}
+            >
+              Skills
+            </h2>
+            <h4 style={styles.introTextContainer}>
+              <ReactMarkdown>{mySkills.intro}</ReactMarkdown>
+            </h4>
+            {mySkills.skills.map((category) => (
+              <div key={category.title} style={styles.skillCategory}>
+                <h3
+                  style={styles.skillTitle}
+                  onMouseEnter={handleMouseEnterTitle}
+                  onMouseLeave={handleMouseLeaveTitle}
+                >
+                  {category.title}
+                </h3>
+                {category.items.map((skill) => (
+                  <div
+                    key={skill.title}
+                    style={styles.skillItem}
+                    onMouseEnter={handleMouseEnterSkill}
+                    onMouseLeave={handleMouseLeaveSkill}
+                  >
+                    <img style={styles.iconStyle} src={skill.icon} alt={skill.title} />
+                    <p>{skill.title}</p>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </Container>
+        </div>
+      </Fade>
     </>
   );
 }
-
-Skills.propTypes = {
-  header: PropTypes.string.isRequired,
-};
 
 export default Skills;

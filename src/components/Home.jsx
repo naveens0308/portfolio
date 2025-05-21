@@ -30,27 +30,29 @@ function Home() {
     })
       .then((res) => res.json())
       .then((res) => setData(res))
-      .catch((err) => err);
+      .catch((err) => console.error(err));
   }, []);
 
   return data ? (
     <Fade>
       <div style={styles.mainContainer}>
-        <h1 style={styles.nameStyle}>{data?.name}</h1>
+        <h1 style={styles.nameStyle}>NAVEEN S</h1>
         <div style={{ flexDirection: 'row' }}>
           <h2 style={styles.inlineChild}>I&apos;m&nbsp;</h2>
           <Typewriter
             options={{
               loop: true,
               autoStart: true,
-              strings: data?.roles,
+              strings: ['Freelancer', 'Developer', 'Engineer'], // Modify as needed
             }}
           />
         </div>
         <Social />
       </div>
     </Fade>
-  ) : <FallbackSpinner />;
+  ) : (
+    <FallbackSpinner />
+  );
 }
 
 export default Home;
